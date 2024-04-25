@@ -43,8 +43,9 @@ public class Game extends Canvas implements Runnable{
 		
 		new Window(640, 665+30, "minefield", this);
 		//minefield = new Minefield(5, 5, 5, false);
+		minefield = new Minefield(10, 10, 20, false);
 		//minefield = new Minefield(32, 32, 200, false);
-		minefield = new Minefield(64, 64, 800, false);
+		//minefield = new Minefield(64, 64, 800, false);
 		
 		this.addMouseListener(new KeyInput());
 		

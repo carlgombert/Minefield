@@ -66,14 +66,14 @@ public class Util {
 				return Color.LIGHT_GRAY;
 			case "M":
 				return Color.RED;
-			case "4":
-				return Color.RED;
 			case "3":
+				return Color.RED;
+			case "4":
 				return Color.MAGENTA;
 			case "2":
 				return Color.GREEN;
 			case "1":
-				return Color.CYAN;
+				return Color.BLUE;
 			case "0":
 				return Color.YELLOW;
 			default:

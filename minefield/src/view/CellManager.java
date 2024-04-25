@@ -62,7 +62,7 @@ public class CellManager {
 					
 					g.setFont(cellFont);
 					
-					g.setColor(Util.getColor(map[y][x].getStatus()));
+					g.setColor(Util.getColor(map[y][x].getStatus()).darker());
 					
 					g.drawString(map[y][x].getStatus(), x*cellSize+cellSize/3, y*cellSize+5*cellSize/8);
 				}
