@@ -60,6 +60,13 @@ public class CellManager {
 				
 				g.fillRect(x*cellSize, y*cellSize, cellSize, cellSize);
 				
+				g.setColor(BORDER_COLOR.darker());
+				
+				int[] ypoints = {y*cellSize+cellSize, y*cellSize, y*cellSize+cellSize};
+				int[] xpoints = {x*cellSize+cellSize, x*cellSize+cellSize, x*cellSize};
+				
+				g.fillPolygon(xpoints, ypoints, 3);
+				
 				g.setColor(CELL_COLOR);
 				
 				g.fillRect(x*cellSize + borderWidth, y*cellSize + borderWidth, 
