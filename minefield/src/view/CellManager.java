@@ -3,6 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import controller.Game;
 import model.Cell;
@@ -17,8 +18,14 @@ public class CellManager {
 	private final Color BORDER_COLOR = Color.GRAY.darker();
 	private final Color CELL_COLOR = Color.LIGHT_GRAY.darker();
 	
-	private static Font cellFont;
-	private static Font hudFont = new Font("Lucida Grande", Font.PLAIN, 12);
+	private final Rectangle QUIT_BUTTON = new Rectangle(Game.WIDTH-80, 645, 60, 15);
+	
+	private Font cellFont;
+	private Font hudFont = new Font("Lucida Grande", Font.PLAIN, 12);
+	private Font popupFont = new Font("Lucida Grande", Font.BOLD, 22);
+	
+	private boolean gameOver = false;
+	private boolean won = false;
 	
 	public CellManager(Cell[][] map) {
 		this.map = map;
@@ -42,7 +49,7 @@ public class CellManager {
 				break;
 		}
 		
-		cellFont = new Font("Lucida Grande", Font.PLAIN, cellSize/2);
+		cellFont = new Font("Lucida Grande", Font.BOLD, cellSize/2);
 	}
 	
 	public void render(Graphics g) {
@@ -78,15 +85,57 @@ public class CellManager {
 		g.setColor(Color.white);
 		
 		g.drawString("Flags left: " + Game.minefield.getFlags(), 20, 655);
+		
+		g.setColor(Color.RED.darker().darker());
+		
+		g.fillRect(QUIT_BUTTON.x, QUIT_BUTTON.y, QUIT_BUTTON.width, QUIT_BUTTON.height);
+		
+		g.setColor(Color.white);
+		
+		g.drawString("quit", QUIT_BUTTON.x+18, QUIT_BUTTON.y+11);
+		
+		if(gameOver) {
+			g.setColor(CELL_COLOR.brighter());
+			g.setFont(popupFont);
+			
+			if(won) {
+				g.fillRect(Game.WIDTH/2-100, Game.HEIGHT/2-50, 200, 40);
+				
+				g.setColor(Color.GREEN.darker().darker());
+				
+				g.drawString("YOU WIN!", Game.WIDTH/2-55, Game.HEIGHT/2-23);
+			}else {
+				g.fillRect(Game.WIDTH/2-100, Game.HEIGHT/2-50, 200, 40);
+				
+				g.setColor(Color.RED.darker().darker());
+				
+				g.drawString("you lost.", Game.WIDTH/2-50, Game.HEIGHT/2-23);
+			}
+		}
 	}
 	
 	public void clickedBox(int x, int y, boolean flag) {
-		x = x - (x % cellSize);
-		x = x / cellSize;
-		
-		y = y - (y % cellSize);
-		y = y / cellSize;
-		
-		System.out.println(Game.minefield.guess(y, x, flag));
+		if(QUIT_BUTTON.contains(x, y)) {
+			Game.endGame();
+		}
+		else if(!gameOver){
+			x = x - (x % cellSize);
+			x = x / cellSize;
+			
+			y = y - (y % cellSize);
+			y = y / cellSize;
+			
+			Game.minefield.guess(y, x, flag);
+			
+			if(Game.minefield.gameOver()) {
+				gameOver = true;
+				if(Game.minefield.getMines() == 0) {
+					won = true;
+				}
+				else {
+					won = false;
+				}
+			}
+		}
 	}
 }

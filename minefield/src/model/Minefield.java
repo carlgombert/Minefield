@@ -168,6 +168,8 @@ public class Minefield {
 					mines--;
 					if(mines == 0){
 						gameOver = true;
+					} else if(flags == 0){
+						gameOver = true;
 					}
 				}
 				else {
@@ -181,6 +183,9 @@ public class Minefield {
 	    		if(flag) {
 	    			flags--;
 	    			map[row][col].setStatus("F");
+	    			if(flags == 0){
+						gameOver = true;
+					}
 	    		}
 				map[row][col].setRevealed(true);
 			}

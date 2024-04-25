@@ -8,21 +8,25 @@ import java.util.Scanner;
 import model.Minefield;
 import util.Util;
 import view.CellManager;
+import view.MainMenu;
 import view.Window;
 
 
 public class Game extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = -5505267217615912489L;
-
+	
 	private Thread thread;
 	private boolean running = false;
 	
 	public static CellManager cellManager;
 	public static Minefield minefield;
+	public static MainMenu mainMenu = new MainMenu();
 	
 	public static Difficulty difficulty = Difficulty.Medium;
 	public static GameState state = GameState.Menu;
+	
+	public static final int WIDTH = 640, HEIGHT = 665+30;
 	
 	public enum Difficulty {
 		Easy,
@@ -41,17 +45,37 @@ public class Game extends Canvas implements Runnable{
 	
 	public Game() {
 		
-		new Window(640, 665+30, "minefield", this);
-		//minefield = new Minefield(5, 5, 5, false);
-		minefield = new Minefield(10, 10, 20, false);
-		//minefield = new Minefield(32, 32, 200, false);
-		//minefield = new Minefield(64, 64, 800, false);
+		new Window(WIDTH, HEIGHT, "minefield", this);
 		
 		this.addMouseListener(new KeyInput());
 		
-		state = GameState.Game;
+		state = GameState.Menu;
 		
 	}
+	
+	public static void beginGame(Difficulty difficulty) {
+		Game.difficulty = difficulty;
+		
+		switch(difficulty) {
+			case Easy:
+				minefield = new Minefield(5, 5, 5, false);
+				break;
+			case Medium:
+				minefield = new Minefield(10, 10, 20, false);
+				break;
+			case Hard:
+				minefield = new Minefield(32, 32, 200, false);
+				break;
+		}
+		
+		state = GameState.Game;
+			
+	}
+	
+	public static void endGame() {
+		state = GameState.Menu;
+	}
+	
 	
 	/**
      * Starts the game loop by creating and starting a new thread.
@@ -135,9 +159,9 @@ public class Game extends Canvas implements Runnable{
 		Graphics g = bs.getDrawGraphics();
 		
 		if(state == GameState.Menu) {
-			
-			
-		} else if(state == GameState.Game){
+			mainMenu.render(g);
+		} 
+		else if(state == GameState.Game){
 			cellManager.render(g);
 		}
 		

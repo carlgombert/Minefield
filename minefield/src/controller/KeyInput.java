@@ -20,10 +20,17 @@ public class KeyInput implements MouseListener {
 	public void mousePressed(MouseEvent e) 
 	{
 		if(e.getButton() == MouseEvent.BUTTON1) {
-			Game.cellManager.clickedBox(e.getX(), e.getY(), false);
+			if(Game.state == Game.GameState.Game) {
+				Game.cellManager.clickedBox(e.getX(), e.getY(), false);
+			}
+			if(Game.state == Game.GameState.Menu) {
+				Game.mainMenu.checkButton(e.getX(), e.getY());
+			}
 		}
 		else {
-			Game.cellManager.clickedBox(e.getX(), e.getY(), true);
+			if(Game.state == Game.GameState.Game) {
+				Game.cellManager.clickedBox(e.getX(), e.getY(), true);
+			}
 		}
 	}
 	
