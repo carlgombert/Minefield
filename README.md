@@ -1,5 +1,5 @@
 # Minefield
-Minesweeper implementation in java with some alternative rules  
+Minesweeper implementation in java with some alternate rules  
 GUI built with Java AWT  
 
 5x5 game  
