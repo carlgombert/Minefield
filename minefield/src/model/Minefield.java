@@ -7,6 +7,7 @@ import java.util.Queue;
 import java.util.Random;
 
 import controller.Game;
+import util.Sound;
 import util.Util;
 import view.CellManager;
 
@@ -158,6 +159,7 @@ public class Minefield {
 		}
     	else {
     		if(firstMove) {
+    			Sound.digSound();
     			createMines(row, col, mines);
     			evaluateField();
     			if(map[row][col].getStatus().equals("0")) {
@@ -173,9 +175,11 @@ public class Minefield {
 						flags--;
 						mines--;
 						revealCell(map[row][col]);
+						Sound.flagSound();
 					}
 				}
 				else {
+					Sound.explosionSound();
 					revealCell(map[row][col]);
 					gameOver = true;
 				}
@@ -187,9 +191,11 @@ public class Minefield {
 		    			map[row][col].setStatus("F");
 		    			map[row][col].setFalseFlag(true);
 		    			revealCell(map[row][col]);
+		    			Sound.flagSound();
 	    			}
 	    		}
 	    		else {
+	    			Sound.digSound();
 	    			revealCell(map[row][col]);
 	    			if(map[row][col].getStatus().equals("0")) {
 		    			revealZeroes(row,col);

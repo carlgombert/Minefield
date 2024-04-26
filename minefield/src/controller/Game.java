@@ -6,6 +6,7 @@ import java.awt.image.BufferStrategy;
 import java.util.Scanner;
 
 import model.Minefield;
+import util.Sound;
 import util.Util;
 import view.CellManager;
 import view.MainMenu;
@@ -46,6 +47,8 @@ public class Game extends Canvas implements Runnable{
 	public Game() {
 		
 		new Window(WIDTH, HEIGHT, "minefield", this);
+		
+		new Sound();
 		
 		this.addMouseListener(new KeyInput());
 		

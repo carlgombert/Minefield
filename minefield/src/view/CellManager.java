@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 
 import controller.Game;
 import model.Cell;
+import util.Sound;
 import util.Util;
 
 public class CellManager {
@@ -135,6 +136,7 @@ public class CellManager {
 	public void clickedBox(int x, int y, boolean flag) {
 		if(QUIT_BUTTON.contains(x, y)) {
 			Game.endGame();
+			Sound.clickSound();
 		}
 		else if(!gameOver){
 			x = x - (x % cellSize);
@@ -149,9 +151,11 @@ public class CellManager {
 				gameOver = true;
 				if(Game.minefield.getMines() == 0) {
 					won = true;
+					Sound.winSound();
 				}
 				else {
 					won = false;
+					Sound.loseSound();
 				}
 			}
 		}

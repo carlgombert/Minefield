@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import controller.Game;
+import util.Sound;
 
 public class MainMenu {
 
@@ -41,12 +42,15 @@ public class MainMenu {
 	public void checkButton(int x, int y) {
 		if(EASY_BUTTON.contains(x, y)) {
 			Game.beginGame(Game.difficulty.Easy);
+			Sound.clickSound();
 		}
 		if(MEDIUM_BUTTON.contains(x, y)) {
 			Game.beginGame(Game.difficulty.Medium);
+			Sound.clickSound();
 		}
 		if(HARD_BUTTON.contains(x, y)) {
 			Game.beginGame(Game.difficulty.Hard);
+			Sound.clickSound();
 		}
 	}
 }
