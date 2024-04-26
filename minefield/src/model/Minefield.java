@@ -44,6 +44,9 @@ public class Minefield {
     
     private boolean debugMode;
     
+    private int revealedCells = 0;
+    private int totalCells;
+    
     /*Things to Note:
      * Please review ALL files given before attempting to write these functions.
      * Understand the Cell.java class to know what object our array contains and what methods you can utilize
@@ -73,7 +76,10 @@ public class Minefield {
     	this.mines = flags;
     	this.debugMode = debugMode;
     	
+    	this.totalCells = rows * columns;
+    	
     	Game.cellManager = new CellManager(map);
+
     }
 
     /**
@@ -161,34 +167,38 @@ public class Minefield {
     			firstMove = false;
     		}
     		else if(map[row][col].getStatus().equals("M")) {
-				map[row][col].setRevealed(true);
 				if(flag) {
-					map[row][col].setStatus("F");
-					flags--;
-					mines--;
-					if(mines == 0){
-						gameOver = true;
-					} else if(flags == 0){
-						gameOver = true;
+					if(flags > 0 && !map[row][col].getStatus().equals("F")) {
+						map[row][col].setStatus("F");
+						flags--;
+						mines--;
+						revealCell(map[row][col]);
 					}
 				}
 				else {
+					revealCell(map[row][col]);
 					gameOver = true;
 				}
 	    	}
 			else if(!map[row][col].getStatus().equals("M")){
-	    		if(map[row][col].getStatus().equals("0")) {
-	    			revealZeroes(row,col);
-	    		}
 	    		if(flag) {
-	    			flags--;
-	    			map[row][col].setStatus("F");
-	    			if(flags == 0){
-						gameOver = true;
-					}
+	    			if(flags > 0 && !map[row][col].getRevealed()) {
+		    			flags--;
+		    			map[row][col].setStatus("F");
+		    			map[row][col].setFalseFlag(true);
+		    			revealCell(map[row][col]);
+	    			}
 	    		}
-				map[row][col].setRevealed(true);
+	    		else {
+	    			revealCell(map[row][col]);
+	    			if(map[row][col].getStatus().equals("0")) {
+		    			revealZeroes(row,col);
+		    		}
+	    		}
 			}
+    		if(revealedCells == totalCells) {
+    			gameOver = true;
+    		}
 	    	return true;
     	}
     }
@@ -223,7 +233,7 @@ public class Minefield {
         stack.push(points);
         while(!stack.isEmpty()){
             int[] curr = (int[]) stack.pop();
-            map[curr[0]][curr[1]].setRevealed(true);
+            revealCell(map[curr[0]][curr[1]]);
             if (curr[0] + 1 <= rows-1 && map[curr[0]+1][curr[1]].getStatus().equals("0") && map[curr[0]+1][curr[1]].getRevealed() == false) {
                 int[] addDown = {curr[0] + 1,curr[1]};
                 stack.push(addDown);
@@ -258,7 +268,7 @@ public class Minefield {
     public void revealStartingArea(int y, int x) {
     	Q1Gen<Point> queue = new Q1Gen<Point>();
   
-    	map[y][x].setRevealed(true);
+    	revealCell(map[y][x]);
     	Point loc = new Point(x,y);
     	
     	queue.add(loc);
@@ -266,7 +276,7 @@ public class Minefield {
     	while(queue.length() != 0) {
     		
     		Point curr = queue.remove();
-    		map[curr.y][curr.x].setRevealed(true);
+    		revealCell(map[curr.y][curr.x]);
     		
     		if(map[curr.y][curr.x].getStatus().equals("M")) {
     			return;
@@ -428,6 +438,13 @@ public class Minefield {
 			default:
 				return ANSI_RED + input + ANSI_GREY_BACKGROUND;
     			
+    	}
+    }
+    
+    private void revealCell(Cell cell) {
+    	if(!cell.getRevealed()) {
+	    	revealedCells++;
+	    	cell.setRevealed(true);
     	}
     }
 

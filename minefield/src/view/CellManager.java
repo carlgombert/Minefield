@@ -73,7 +73,18 @@ public class CellManager {
 						cellSize - borderWidth*2, cellSize - borderWidth*2);
 				
 				if(map[y][x].getRevealed()) {
+					g.setFont(cellFont);
 					
+					g.setColor(Util.getColor(map[y][x].getStatus()).darker());
+					
+					if(!gameOver || !map[y][x].getFalseFlag()) {
+						g.drawString(map[y][x].getStatus(), x*cellSize+cellSize/3, y*cellSize+5*cellSize/8);
+					} else {
+						g.drawString("X", x*cellSize+cellSize/3, y*cellSize+5*cellSize/8);
+					}
+					
+					
+				} else if(gameOver && map[y][x].getStatus().equals("M")) {
 					g.setFont(cellFont);
 					
 					g.setColor(Util.getColor(map[y][x].getStatus()).darker());

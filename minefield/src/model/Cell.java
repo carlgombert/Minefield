@@ -3,6 +3,7 @@ package model;
 public class Cell {
     private boolean revealed;
     private String status;
+    private Boolean falseFlag = false;
     
     public Cell(boolean revealed, String status) {
         this.revealed = revealed;
@@ -23,5 +24,13 @@ public class Cell {
     public void setStatus(String c) {
         status = c;
     }
+
+	public Boolean getFalseFlag() {
+		return falseFlag;
+	}
+
+	public void setFalseFlag(Boolean falseFlag) {
+		this.falseFlag = falseFlag;
+	}
 
 }
