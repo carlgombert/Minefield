@@ -2,6 +2,8 @@ package util;
 
 import java.awt.Color;
 
+import model.Cell;
+
 public class Util {
 	
 	/**
@@ -81,5 +83,15 @@ public class Util {
 				
 		}
 		
+	}
+	
+	public static Cell[][] copy2DCell(Cell[][] map){
+		Cell[][] copy = new Cell[map.length][map[0].length];
+		for(int y = 0; y < map.length; y++) {
+			for(int x = 0; x < map[y].length; x++) {
+				copy[y][x] = map[y][x].copy();
+			}
+		}
+		return copy;
 	}
 }

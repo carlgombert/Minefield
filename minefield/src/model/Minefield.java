@@ -43,10 +43,12 @@ public class Minefield {
     
     private boolean firstMove = true;
     
-    private boolean debugMode;
+    private boolean debugMode = false;
     
     private int revealedCells = 0;
     private int totalCells;
+    
+    private boolean testMode = false;
     
     /*Things to Note:
      * Please review ALL files given before attempting to write these functions.
@@ -81,6 +83,19 @@ public class Minefield {
     	
     	Game.cellManager = new CellManager(map);
 
+    }
+    
+    public Minefield(Cell[][] map, int flags, int mines) {
+    	this.map = map;
+    	this.flags = flags;
+    	this.mines = flags;
+    	
+    	this.rows = map.length;
+    	this.cols = map[0].length;
+    	
+    	this.totalCells = rows * cols;
+    	
+    	testMode = true;
     }
 
     /**
@@ -127,16 +142,27 @@ public class Minefield {
      * @param mines      Number of mines to place.
      */
     public void createMines(int y, int x, int mines) {
-    	for(int i = 0; i < mines; i++) {
-    		int randX = Util.randomNumber(0, cols);
-    		int randY = Util.randomNumber(0, rows);
-    		if(x != randX && y != randY && !map[randY][randX].getStatus().equals("M")) {
-    			map[randY][randX].setStatus("M");
-    		}
-    		else {
-    			i--;
-    		}
+    	boolean running = true;
+    	
+    	Cell[][] tempMap = Util.copy2DCell(map);
+    	while(running) {
+	    	tempMap = Util.copy2DCell(map);
+	    	
+	    	for(int i = 0; i < mines; i++) {
+	    		int randX = Util.randomNumber(0, cols);
+	    		int randY = Util.randomNumber(0, rows);
+	    		if(x != randX && y != randY && !tempMap[randY][randX].getStatus().equals("M")) {
+	    			tempMap[randY][randX].setStatus("M");
+	    		}
+	    		else {
+	    			i--;
+	    		}
+	    	}
+	    	
+	    	running = !BoardTester.testBoard(Util.copy2DCell(tempMap), y, x, totalCells, flags, mines);
     	}
+    	map = tempMap;
+    	Game.cellManager.setMap(map);
     }
 
     /**
@@ -159,14 +185,24 @@ public class Minefield {
 		}
     	else {
     		if(firstMove) {
-    			Sound.digSound();
-    			createMines(row, col, mines);
-    			evaluateField();
-    			if(map[row][col].getStatus().equals("0")) {
-	    			revealZeroes(row,col);
-	    		}
-    			revealStartingArea(row, col);
-    			firstMove = false;
+    			if(testMode) {
+    				evaluateField();
+    				if(map[row][col].getStatus().equals("0")) {
+		    			revealZeroes(row,col);
+		    		}
+	    			revealStartingArea(row, col);
+	    			firstMove = false;
+    			}
+    			else {
+	    			Sound.digSound();
+	    			createMines(row, col, mines);
+	    			evaluateField();
+	    			if(map[row][col].getStatus().equals("0")) {
+		    			revealZeroes(row,col);
+		    		}
+	    			revealStartingArea(row, col);
+	    			firstMove = false;
+    			}
     		}
     		else if(map[row][col].getStatus().equals("M")) {
 				if(flag) {
@@ -175,11 +211,15 @@ public class Minefield {
 						flags--;
 						mines--;
 						revealCell(map[row][col]);
-						Sound.flagSound();
+						if(!testMode) {
+							Sound.flagSound();
+						}
 					}
 				}
 				else {
-					Sound.explosionSound();
+					if(!testMode) {
+						Sound.explosionSound();
+					}
 					revealCell(map[row][col]);
 					gameOver = true;
 				}
@@ -191,11 +231,15 @@ public class Minefield {
 		    			map[row][col].setStatus("F");
 		    			map[row][col].setFalseFlag(true);
 		    			revealCell(map[row][col]);
-		    			Sound.flagSound();
+		    			if(!testMode) {
+		    				Sound.flagSound();
+		    			}
 	    			}
 	    		}
 	    		else {
-	    			Sound.digSound();
+	    			if(!testMode) {
+	    				Sound.digSound();
+	    			}
 	    			revealCell(map[row][col]);
 	    			if(map[row][col].getStatus().equals("0")) {
 		    			revealZeroes(row,col);
@@ -470,5 +514,13 @@ public class Minefield {
 
 	public void setMap(Cell[][] map) {
 		this.map = map;
+	}
+	
+	public int getRevealedCells() {
+		return revealedCells;
+	}
+	
+	public boolean isFirstTurn() {
+		return firstMove;
 	}
 }

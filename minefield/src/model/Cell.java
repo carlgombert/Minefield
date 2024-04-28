@@ -32,5 +32,11 @@ public class Cell {
 	public void setFalseFlag(Boolean falseFlag) {
 		this.falseFlag = falseFlag;
 	}
+	
+	public Cell copy(){
+		Cell copy = new Cell(revealed, status);
+		copy.setFalseFlag(falseFlag);
+		return copy;
+	}
 
 }

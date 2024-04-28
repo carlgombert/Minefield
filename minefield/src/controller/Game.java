@@ -24,10 +24,14 @@ public class Game extends Canvas implements Runnable{
 	public static Minefield minefield;
 	public static MainMenu mainMenu = new MainMenu();
 	
+	public static Solver solver = new Solver();
+	
 	public static Difficulty difficulty = Difficulty.Medium;
 	public static GameState state = GameState.Menu;
 	
 	public static final int WIDTH = 640, HEIGHT = 665+30;
+	
+	public static boolean autoSolve = false;
 	
 	public enum Difficulty {
 		Easy,
@@ -146,7 +150,9 @@ public class Game extends Canvas implements Runnable{
      * Updates data in program
      */
 	private void tick() {
-		
+		if(autoSolve) {
+			solver.tick();
+		}
 	}
 	
 	/**

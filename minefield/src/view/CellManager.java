@@ -13,13 +13,15 @@ import util.Util;
 public class CellManager {
 	
 	private Cell[][] map;
-	private int cellSize;
+	public int cellSize;
 	private int borderWidth;
 	
 	private final Color BORDER_COLOR = Color.GRAY.darker();
 	private final Color CELL_COLOR = Color.LIGHT_GRAY.darker();
 	
 	private final Rectangle QUIT_BUTTON = new Rectangle(Game.WIDTH-80, 645, 60, 15);
+	
+	private final Rectangle AUTO_BUTTON = new Rectangle(Game.WIDTH-160, 645, 60, 15);
 	
 	private Font cellFont;
 	private Font hudFont = new Font("Lucida Grande", Font.PLAIN, 12);
@@ -51,6 +53,10 @@ public class CellManager {
 		}
 		
 		cellFont = new Font("Lucida Grande", Font.BOLD, cellSize/2);
+	}
+	
+	public void setMap(Cell[][] map) {
+		this.map = map;
 	}
 	
 	public void render(Graphics g) {
@@ -109,9 +115,13 @@ public class CellManager {
 		
 		g.fillRect(QUIT_BUTTON.x, QUIT_BUTTON.y, QUIT_BUTTON.width, QUIT_BUTTON.height);
 		
+		g.fillRect(AUTO_BUTTON.x, AUTO_BUTTON.y, AUTO_BUTTON.width, AUTO_BUTTON.height);
+		
 		g.setColor(Color.white);
 		
 		g.drawString("quit", QUIT_BUTTON.x+18, QUIT_BUTTON.y+11);
+		
+		g.drawString("auto", AUTO_BUTTON.x+18, AUTO_BUTTON.y+11);
 		
 		if(gameOver) {
 			g.setColor(CELL_COLOR.brighter());
@@ -135,10 +145,20 @@ public class CellManager {
 	
 	public void clickedBox(int x, int y, boolean flag) {
 		if(QUIT_BUTTON.contains(x, y)) {
+			Game.autoSolve = false;
 			Game.endGame();
 			Sound.clickSound();
 		}
+		else if(AUTO_BUTTON.contains(x, y) && !gameOver) {
+			if(Game.autoSolve) {
+				Game.autoSolve = false;
+			} else {
+				Game.autoSolve = true;
+				Game.solver.setSpeed(borderWidth*2);
+			}
+		}
 		else if(!gameOver){
+			
 			x = x - (x % cellSize);
 			x = x / cellSize;
 			
@@ -148,6 +168,7 @@ public class CellManager {
 			Game.minefield.guess(y, x, flag);
 			
 			if(Game.minefield.gameOver()) {
+				Game.autoSolve = false;
 				gameOver = true;
 				if(Game.minefield.getMines() == 0) {
 					won = true;
