@@ -115,6 +115,10 @@ public class CellManager {
 		
 		g.fillRect(QUIT_BUTTON.x, QUIT_BUTTON.y, QUIT_BUTTON.width, QUIT_BUTTON.height);
 		
+		if(!Game.autoSolve) {
+			g.setColor(Color.GREEN.darker().darker());
+		}
+		
 		g.fillRect(AUTO_BUTTON.x, AUTO_BUTTON.y, AUTO_BUTTON.width, AUTO_BUTTON.height);
 		
 		g.setColor(Color.white);
